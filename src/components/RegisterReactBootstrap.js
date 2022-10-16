@@ -8,10 +8,15 @@ const auth = getAuth(app);
 
 function RegisterReactBootstrap() {
     const [passwordError, setPasswordError] = useState('');
+    const [success, setSuccess] = useState(false);
+
     const handleRegister = event => {
         event.preventDefault();
-        const email = event.target.email.value;
-        const password = event.target.password.value;
+        setSuccess(false);
+
+        const form = event.target;
+        const email = form.email.value;
+        const password = form.password.value;
         console.log(email, password);
         if (!/(?=.*[A-Z].*[A-Z])/.test(password)) {
             setPasswordError('Please provide at least two uppercase');
@@ -31,8 +36,11 @@ function RegisterReactBootstrap() {
             .then((result) => {
                 const user = result.user;
                 console.log(user);
+                setSuccess(true);
+                form.reset();
             }).catch((err) => {
                 console.error('error: ', err);
+                setPasswordError(err.message);
             });
     };
     return (
@@ -49,6 +57,7 @@ function RegisterReactBootstrap() {
                     <Form.Control name='password' type="password" placeholder="Password" required />
                 </Form.Group>
                 <p className='text-danger'>{passwordError}</p>
+                {success && <p className='text-success'>User Created Successfully</p>}
                 <Button variant="primary" type="submit">
                     Register
                 </Button>
