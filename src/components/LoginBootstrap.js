@@ -14,9 +14,8 @@ const LoginBootstrap = () => {
         setSuccess(false);
         const form = event.target;
         const email = form.email.value;
-        console.log("🚀 ~ email", email);
         const password = form.password.value;
-        console.log("🚀 ~ password", password);
+        console.log('email, password :>> ', email, password);
 
         signInWithEmailAndPassword(auth, email, password)
             .then((result) => {
@@ -31,7 +30,7 @@ const LoginBootstrap = () => {
     const handleEmailBlur = (event) => {
         const email = event.target.value;
         setUserEmail(email);
-        console.log("🚀 ~ email", email);
+        console.log("email", email);
     };
 
     const handleForgetPassword = () => {
@@ -51,11 +50,11 @@ const LoginBootstrap = () => {
             <h3 className='text-success'>Please Login!!!</h3>
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                    <label htmlFor="formGroupExampleInput" className="form-label">Example label</label>
+                    <label htmlFor="formGroupExampleInput" className="form-label">Your Email Address</label>
                     <input onBlur={handleEmailBlur} name='email' type="email" className="form-control" id="formGroupExampleInput" placeholder="Your Email" required />
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="formGroupExampleInput2" className="form-label">Another label</label>
+                    <label htmlFor="formGroupExampleInput2" className="form-label">Your Password</label>
                     <input name='password' type="password" className="form-control" id="formGroupExampleInput2" placeholder="Your Password" required />
                 </div>
                 <button className='btn btn-primary' type='submit'>Login</button>

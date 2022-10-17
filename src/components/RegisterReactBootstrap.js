@@ -43,7 +43,7 @@ function RegisterReactBootstrap() {
                 setSuccess(true);
                 form.reset();
                 verifyEmail();
-                updateUserName();
+                updateUserName(name);
             }).catch((error) => {
                 console.error('error: ', error);
                 setPasswordError(error.message);
@@ -53,8 +53,6 @@ function RegisterReactBootstrap() {
     const verifyEmail = () => {
         sendEmailVerification(auth.currentUser).then(() => {
             alert('Please check your email and verify your email address');
-        }).catch((error) => {
-            console.error(error);
         });
     };
 
@@ -62,7 +60,7 @@ function RegisterReactBootstrap() {
         updateProfile(auth.currentUser, {
             displayName: name
         }).then(() => {
-            'display update name';
+            console.log('display name updated');
         }).catch((error) => {
             console.error(error);
         });
