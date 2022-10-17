@@ -1,4 +1,4 @@
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import app from '../firebase/firebase.init';
@@ -7,6 +7,7 @@ const auth = getAuth(app);
 
 const LoginBootstrap = () => {
     const [success, setSuccess] = useState(false);
+    const [userEmail, setUserEmail] = useState('');
 
     const handleSubmit = event => {
         event.preventDefault();
@@ -27,13 +28,31 @@ const LoginBootstrap = () => {
             });
     };
 
+    const handleEmailBlur = (event) => {
+        const email = event.target.value;
+        setUserEmail(email);
+        console.log("🚀 ~ email", email);
+    };
+
+    const handleForgetPassword = () => {
+        if (!userEmail) {
+            alert('Please enter your email address.');
+            return;
+        }
+        sendPasswordResetEmail(auth, userEmail).then(() => {
+            alert('Password Reset email sent. Please check your email.');
+        }).catch((error) => {
+            console.error(error);
+        });
+    };
+
     return (
         <div className='w-50 mx-auto'>
             <h3 className='text-success'>Please Login!!!</h3>
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label htmlFor="formGroupExampleInput" className="form-label">Example label</label>
-                    <input name='email' type="email" className="form-control" id="formGroupExampleInput" placeholder="Your Email" required />
+                    <input onBlur={handleEmailBlur} name='email' type="email" className="form-control" id="formGroupExampleInput" placeholder="Your Email" required />
                 </div>
                 <div className="mb-3">
                     <label htmlFor="formGroupExampleInput2" className="form-label">Another label</label>
@@ -43,6 +62,7 @@ const LoginBootstrap = () => {
             </form>
             {success && <p>Successfully login to the account</p>}
             <p><small>New to this website? Please <Link to={'/register'}>Register</Link></small></p>
+            <p><small>Forget Password? <button onClick={handleForgetPassword} type="button" className="btn btn-link">Reset Password</button></small></p>
         </div>
     );
 };

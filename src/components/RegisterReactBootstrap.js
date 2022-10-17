@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, getAuth, sendEmailVerification, sendPasswordResetEmail } from 'firebase/auth';
+import { createUserWithEmailAndPassword, getAuth, sendEmailVerification, updateProfile } from 'firebase/auth';
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -16,9 +16,12 @@ function RegisterReactBootstrap() {
         setSuccess(false);
 
         const form = event.target;
+        const name = form.name.value;
         const email = form.email.value;
         const password = form.password.value;
-        console.log(email, password);
+        console.log(name, email, password);
+
+        // validate password
         if (!/(?=.*[A-Z].*[A-Z])/.test(password)) {
             setPasswordError('Please provide at least two uppercase');
             return;
@@ -40,6 +43,7 @@ function RegisterReactBootstrap() {
                 setSuccess(true);
                 form.reset();
                 verifyEmail();
+                updateUserName();
             }).catch((error) => {
                 console.error('error: ', error);
                 setPasswordError(error.message);
@@ -54,14 +58,24 @@ function RegisterReactBootstrap() {
         });
     };
 
-    const handleForgetPassword = () => {
-        // sendPasswordResetEmail(auth, email);
+    const updateUserName = (name) => {
+        updateProfile(auth.currentUser, {
+            displayName: name
+        }).then(() => {
+            'display update name';
+        }).catch((error) => {
+            console.error(error);
+        });
     };
 
     return (
         <div className='w-50 mx-auto'>
             <h3 className='text-primary'>Please Register !!!</h3>
             <Form onSubmit={handleRegister}>
+                <Form.Group className="mb-3" controlId="formBasicName">
+                    <Form.Label>Your Name</Form.Label>
+                    <Form.Control type="text" name='name' placeholder="Enter Name" required />
+                </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>Email address</Form.Label>
                     <Form.Control type="email" name='email' placeholder="Enter email" required />
@@ -77,7 +91,6 @@ function RegisterReactBootstrap() {
                     Register
                 </Button>
                 <p><small>Already have an account? Please <Link to={'/login'}>Login</Link></small></p>
-                <p>Forget Password? <button onClick={handleForgetPassword} type="button" className="btn btn-link">Please Reset</button></p>
             </Form>
         </div>
     );
