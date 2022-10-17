@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
+import { createUserWithEmailAndPassword, getAuth, sendEmailVerification, sendPasswordResetEmail } from 'firebase/auth';
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -39,11 +39,25 @@ function RegisterReactBootstrap() {
                 console.log(user);
                 setSuccess(true);
                 form.reset();
-            }).catch((err) => {
-                console.error('error: ', err);
-                setPasswordError(err.message);
+                verifyEmail();
+            }).catch((error) => {
+                console.error('error: ', error);
+                setPasswordError(error.message);
             });
     };
+
+    const verifyEmail = () => {
+        sendEmailVerification(auth.currentUser).then(() => {
+            alert('Please check your email and verify your email address');
+        }).catch((error) => {
+            console.error(error);
+        });
+    };
+
+    const handleForgetPassword = () => {
+        // sendPasswordResetEmail(auth, email);
+    };
+
     return (
         <div className='w-50 mx-auto'>
             <h3 className='text-primary'>Please Register !!!</h3>
@@ -63,6 +77,7 @@ function RegisterReactBootstrap() {
                     Register
                 </Button>
                 <p><small>Already have an account? Please <Link to={'/login'}>Login</Link></small></p>
+                <p>Forget Password? <button onClick={handleForgetPassword} type="button" className="btn btn-link">Please Reset</button></p>
             </Form>
         </div>
     );
